@@ -1,6 +1,6 @@
 const result = document.querySelector(".result");
-const buttons = document.querySelectorAll(".buttons button");
-const extraInfo = document.querySelector(".extra-info"); 
+const buttons = document.querySelectorAll(".buttons button, .additional-buttons button");
+const extraInfo = document.querySelector(".extra-info");
 
 let currentNumber = "";
 let firstOperand = null;
@@ -80,6 +80,7 @@ function clearCalculator() {
     firstOperand = null;
     operator = null;
     updateResult("0");
+    extraInfo.innerText = ""; // Limpa as informações extras
 }
 
 function setPercentage() {
@@ -102,6 +103,7 @@ function setPercentage() {
 function modulo() {
     if (currentNumber && firstOperand !== null) {
         let modResult = (firstOperand % parseFloat(currentNumber)).toString();
+        console.log(`Modulo de ${firstOperand} % ${currentNumber} = ${modResult}`);
         extraInfo.innerText = `Mod: ${modResult}`; 
     }
 }
@@ -110,6 +112,7 @@ function fatoracao() {
     if (currentNumber) {
         let num = parseInt(currentNumber);
         let fatores = calcularFatores(num);
+        console.log(`Fatores de ${num}: ${fatores.join(", ")}`);
         extraInfo.innerText = `Fatores de ${num}: ${fatores.join(", ")}`;
     }
 }
@@ -128,12 +131,8 @@ function mdc() {
     if (currentNumber && firstOperand !== null) {
         let num1 = Math.abs(firstOperand);
         let num2 = Math.abs(parseFloat(currentNumber));
-        while (num2) {
-            let temp = num2;
-            num2 = num1 % num2;
-            num1 = temp;
-        }
-        let mdcResult = num1.toString();
+        let mdcResult = mdcCalc(num1, num2);
+        console.log(`MDC de ${firstOperand} e ${currentNumber} = ${mdcResult}`);
         extraInfo.innerText = `MDC: ${mdcResult}`; 
     }
 }
@@ -142,14 +141,15 @@ function mmc() {
     if (currentNumber && firstOperand !== null) {
         let num1 = Math.abs(firstOperand);
         let num2 = Math.abs(parseFloat(currentNumber));
-        let lcm = (num1 * num2) / mdcCalc(num1, num2);
+        let lcm = (num1 * num2) / mdcCalc(num1, num2); // Chamada correta para a função mdcCalc
         let mmcResult = lcm.toString();
+        console.log(`MMC de ${firstOperand} e ${currentNumber} = ${mmcResult}`);
         extraInfo.innerText = `MMC: ${mmcResult}`; 
     }
 }
 
 function mdcCalc(a, b) {
-    while (b) {
+    while (b !== 0) {
         let temp = b;
         b = a % b;
         a = temp;
@@ -161,6 +161,7 @@ function ehPrimo() {
     if (currentNumber !== "") {
         let num = parseInt(currentNumber);
         let primeResult = isPrime(num) ? "Primo" : "Composto";
+        console.log(`${num} é ${primeResult}`);
         extraInfo.innerText = `Primo/Composto: ${primeResult}`; 
     }
 }
@@ -184,6 +185,7 @@ function ehParOuImpar() {
     if (currentNumber !== "") {
         let num = parseInt(currentNumber);
         let parityResult = num % 2 === 0 ? "Par" : "Ímpar";
+        console.log(`${num} é ${parityResult}`);
         extraInfo.innerText = `Par/Ímpar: ${parityResult}`; 
     }
 }
@@ -220,3 +222,4 @@ buttons.forEach((button) => {
         }
     });
 });
+
